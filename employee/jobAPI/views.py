@@ -2,30 +2,82 @@ from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework.decorators import api_view,permission_classes
-from employee.models import  Job
-from .serializers import JobSerializer
+from employee.models import  Job, JobApplicant
+from .serializers import JobSerializer, JobApplicantSerializer
+
+
+################# show all jobs ##############
 
 @api_view(["Get",])
 # @permission_classes([IsAuthenticated,]) #IsManager
-def index(request):
+def get_jobs(request):
     jobs = Job.objects.all()
     print(jobs)
     serialzier = JobSerializer(instance=jobs,many=True)
     return Response(data=serialzier.data, status=status.HTTP_200_OK)
 
 
+################# show one job ##############
+
+@api_view(["Get",])
+def get_job(request, pk):
+    job = Job.objects.filter(pk =pk)
+    print(job)
+    serialzier = JobSerializer(instance=job, many=True)
+    return Response(data=serialzier.data, status=status.HTTP_200_OK)
+
+
+################# create a job ##############
+
+
 @api_view(["POST",])
 # @permission_classes([IsAuthenticated,IsAdminUser])
-def create(request):
+def create_job(request):
+    request.data._mutable = True
+    request.data.update({"user": request.user.id})
     serializer = JobSerializer(data=request.data)
     if serializer.is_valid():
         serializer.save()
         return Response(data={
             "success":True,
-            "message":"Movie has been created successfuly"
+            "message":"Job has been created successfuly"
         },status=status.HTTP_201_CREATED)
 
     return Response(data={
         "success": False,
         "errors": serializer.errors
     },status=status.HTTP_400_BAD_REQUEST)
+
+
+################# delete a job ##############
+
+@api_view(["DELETE",])
+# @permission_classes([IsAuthenticated,IsAdminUser])
+def delete_job(request, pk):
+    job = Job.objects.get(pk =pk).delete()
+    return Response(status=status.HTTP_204_NO_CONTENT)
+
+
+################# get all applicants ##############
+
+@api_view(["Get",])
+# @permission_classes([IsAuthenticated,]) #IsManager
+def get_applicants(request, job_id):
+    applicants = JobApplicant.objects.filter(job_id = job_id)
+    print(applicants)
+    serialzier = JobApplicantSerializer(instance=applicants,many=True)
+    return Response(data=serialzier.data, status=status.HTTP_200_OK)
+
+################# edit applicant status ##############
+
+@api_view(['PUT'])
+def edit_applicant_status(request,job_id):
+    applicant = JobApplicant.objects.get(job_id = job_id)
+    request.data._mutable = True
+    request.data.update({"user": request.user.id})
+    serializer = JobApplicantSerializer(applicant, data=request.data)
+    if serializer.is_valid():
+        serializer.save()
+        return Response(serializer.data)
+    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+

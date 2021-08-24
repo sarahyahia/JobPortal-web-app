@@ -35,6 +35,7 @@ INSTALLED_APPS = [
     'employee',
     'rest_framework',
     "rest_framework.authtoken",
+    'corsheaders',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -61,7 +62,13 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
 ]
+
+CORS_ORIGIN_ALLOW_ALL = False
+CORS_ORIGIN_WHITELIST = (
+  'http://localhost:3000',
+)
 
 ROOT_URLCONF = 'jobs.urls'
 
@@ -90,7 +97,7 @@ WSGI_APPLICATION = 'jobs.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'jobs',
+        'NAME': 'jobsPortal',
         'USER': 'django',
         'PASSWORD':'123',
         'HOST':'localhost',
