@@ -4,20 +4,21 @@ from django.contrib.auth.models import User
 
 class ProgrammingLanguage(models.Model):
     name = models.CharField(max_length=254)
+    isActive = models.BooleanField(default=False)
 
     def __str__(self):
         return f"{self.name}"
 
 
 EXPERIENCE_CHOICES = [
-    ("Jr","Junior"),
+    ("Junior","Jr"),
     ( "Mid", "Mid"),
-    ("Sr", "Senior")
+    ("Senior","Sr" )
 ]
 
 class Employee(models.Model):
-    id = models.AutoField(primary_key = True, editable=False)
-    user = models.OneToOneField(User,on_delete=models.CASCADE)
+    user = models.OneToOneField(User,primary_key = True,on_delete=models.CASCADE)
+    job_title = models.CharField(max_length=100, blank=True)
     name = models.CharField(max_length=100)
     nationalID = models.CharField(max_length=14, unique=True, error_messages={'invalid':"National Id is already exist!"})
     city = models.CharField(max_length=100,null= True)
@@ -25,7 +26,7 @@ class Employee(models.Model):
     experience_level = models.CharField(max_length=50, choices=EXPERIENCE_CHOICES,null= True)
     little_bio = models.TextField()
     programming_language=models.ManyToManyField(ProgrammingLanguage)
-    # views = models.IntegerField()
+    views = models.IntegerField(default=0)
 
     def __str__(self):
         return str(self.name)

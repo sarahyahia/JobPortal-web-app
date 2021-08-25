@@ -3,8 +3,10 @@ from . import views
 
 urlpatterns = [
     path('',views.get_emps),
+    path('pl/',views.get_program_langs),
     path('<int:pk>',views.get_emp),
     path('add',views.create_emp_profile),
     path('edit',views.edit_emp_profile),
+    
     
 ]

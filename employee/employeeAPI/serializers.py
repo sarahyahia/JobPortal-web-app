@@ -7,7 +7,7 @@ class ProgrammingLanguageSerializer(serializers.ModelSerializer):
     name = serializers.CharField()
     class Meta:
         model = ProgrammingLanguage
-        fields = '__all__'
+        fields = ['name',]
 
 class EmployeeSerializer(WritableNestedModelSerializer):
     # user = UserSerializer(read_only=True)
