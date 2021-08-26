@@ -5,7 +5,7 @@ from employee.auth.serializers import UserSerializer
 
 
 class JobSerializer(serializers.ModelSerializer):
-    # user = UserSerializer(read_only=True)
+    user = UserSerializer(read_only=True)
     programming_language = ProgrammingLanguageSerializer(many=True,read_only=True)
 
     class Meta:

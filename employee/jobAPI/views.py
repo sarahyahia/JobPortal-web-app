@@ -1,9 +1,11 @@
-from rest_framework import status
+from rest_framework import status, generics
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework.decorators import api_view,permission_classes
+from rest_framework.permissions import IsAuthenticated
 from employee.models import  Job, JobApplicant
 from .serializers import JobSerializer, JobApplicantSerializer
+from rest_framework.filters import SearchFilter, OrderingFilter
 
 
 ################# show all jobs ##############
@@ -31,7 +33,7 @@ def get_job(request, pk):
 
 
 @api_view(["POST",])
-# @permission_classes([IsAuthenticated,IsAdminUser])
+@permission_classes([IsAuthenticated])
 def create_job(request):
     request.data._mutable = True
     request.data.update({"user": request.user.id})
@@ -52,7 +54,7 @@ def create_job(request):
 ################# delete a job ##############
 
 @api_view(["DELETE",])
-# @permission_classes([IsAuthenticated,IsAdminUser])
+@permission_classes([IsAuthenticated])
 def delete_job(request, pk):
     job = Job.objects.get(pk =pk).delete()
     return Response(status=status.HTTP_204_NO_CONTENT)
@@ -81,3 +83,32 @@ def edit_applicant_status(request,job_id):
         return Response(serializer.data)
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
+
+################# request to apply for this job ##############
+
+@api_view(["POST",])
+@permission_classes([IsAuthenticated])
+def apply_job(request):
+    request.data._mutable = True
+    request.data.update({"applicant": request.user.id, 'applicant_status': 0})
+    serializer = JobApplicantSerializer(data=request.data)
+    if serializer.is_valid():
+        serializer.save()
+        return Response(data={
+            "success":True,
+            "message":"you applied successfuly"
+        },status=status.HTTP_201_CREATED)
+
+    return Response(data={
+        "success": False,
+        "errors": serializer.errors
+    },status=status.HTTP_400_BAD_REQUEST)
+
+
+################# search all jobs ##############
+
+class JobList(generics.ListAPIView):
+    queryset = Job.objects.all()
+    serializer_class = JobSerializer
+    filter_backends = (SearchFilter,)
+    search_fields = ('job_title', 'description', 'programming_language__name', 'city', 'job_status', 'experience_level',)

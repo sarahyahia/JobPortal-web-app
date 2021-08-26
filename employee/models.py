@@ -31,6 +31,12 @@ class Employee(models.Model):
     def __str__(self):
         return str(self.name)
 
+
+# class EmployeeProgrammingLanguage(models.Model):
+#     employee =models.ForeignKey(Employee, on_delete=models.CASCADE)
+#     programming_language = models.ForeignKey(ProgrammingLanguage, on_delete=models.CASCADE)
+
+
 JOB_STATUS_CHOICES =[
     (0,'Open'),
     (1,'Closed')
