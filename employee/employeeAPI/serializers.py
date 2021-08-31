@@ -7,7 +7,7 @@ class ProgrammingLanguageSerializer(serializers.ModelSerializer):
     # name = serializers.CharField()
     class Meta:
         model = ProgrammingLanguage
-        fields = ['name',]
+        fields = ['name','id',]
 
 class EmployeeSerializer(serializers.ModelSerializer):
     # user = UserSerializer(read_only=True)

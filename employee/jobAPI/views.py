@@ -6,6 +6,7 @@ from rest_framework.permissions import IsAuthenticated
 from employee.models import  Job, JobApplicant
 from .serializers import JobSerializer, JobApplicantSerializer
 from rest_framework.filters import SearchFilter, OrderingFilter
+from django.db import IntegrityError
 
 
 ################# show all jobs ##############
@@ -63,7 +64,7 @@ def delete_job(request, pk):
 ################# get all applicants ##############
 
 @api_view(["Get",])
-# @permission_classes([IsAuthenticated,]) #IsManager
+# @permission_classes([IsAuthenticated,])
 def get_applicants(request, job_id):
     applicants = JobApplicant.objects.filter(job_id = job_id)
     print(applicants)
@@ -76,7 +77,7 @@ def get_applicants(request, job_id):
 def edit_applicant_status(request,job_id):
     applicant = JobApplicant.objects.get(job_id = job_id)
     request.data._mutable = True
-    request.data.update({"user": request.user.id})
+    request.data.update({"applicant": request.user.id})
     serializer = JobApplicantSerializer(applicant, data=request.data)
     if serializer.is_valid():
         serializer.save()
@@ -84,14 +85,17 @@ def edit_applicant_status(request,job_id):
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
-################# request to apply for this job ##############
+#################  apply for this job ##############
 
 @api_view(["POST",])
 @permission_classes([IsAuthenticated])
 def apply_job(request):
     request.data._mutable = True
-    request.data.update({"applicant": request.user.id, 'applicant_status': 0})
-    serializer = JobApplicantSerializer(data=request.data)
+    request.data.update({"applicant_id": f"{request.user.id}", 'applicant_status': f"{0}"})
+    reqData = request.data
+    print(reqData)
+    serializer = JobApplicantSerializer(data=reqData)
+    print(serializer)
     if serializer.is_valid():
         serializer.save()
         return Response(data={
@@ -111,4 +115,4 @@ class JobList(generics.ListAPIView):
     queryset = Job.objects.all()
     serializer_class = JobSerializer
     filter_backends = (SearchFilter,)
-    search_fields = ('job_title', 'description', 'programming_language__name', 'city', 'job_status', 'experience_level',)
+    search_fields = ('job_title', '@description', 'programming_language__name', 'city', 'job_status', 'experience_level',)

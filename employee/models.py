@@ -68,8 +68,9 @@ STATUS_CHOICES=[
 
 class JobApplicant(models.Model):
     job = models.ForeignKey(Job, on_delete=models.CASCADE)
-    employer = models.ForeignKey(User, on_delete=models.CASCADE)
     applicant = models.ForeignKey(Employee, on_delete=models.CASCADE)
-    applicant_status = models.IntegerField( choices=STATUS_CHOICES, default='Review')
+    applicant_status = models.CharField(max_length=50, choices=STATUS_CHOICES, default='Review')
     def __str__(self):
-        return str( self.job.job_title+ ' applicant ' + self.applicant.name)
+        return str( self.job.job_title)
+    def __iter__(self):
+        return [ self.job, self.applicant, self.applicant_status]

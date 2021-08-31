@@ -94,20 +94,21 @@ class EmployeeList(generics.ListAPIView):
         for x in self.request.GET :
             #print(x)
             #print(self.request.GET[x])
+            queryset = None
             if(x=="little_bio"):
               queryset=Employee.objects.filter(little_bio__search=self.request.GET[x])
               #search_fields = ('@little_bio',)
             elif(x=="programming_language"):
-              queryset=Employee.objects.filter(programming_language__name=self.request.GET[x])
+              queryset=Employee.objects.filter(programming_language__name__search=self.request.GET[x])
              # search_fields = ('programming_language__name',)
             elif(x=="city"):
-              queryset=Employee.objects.filter(city=self.request.GET[x])
+              queryset=Employee.objects.filter(city__search=self.request.GET[x])
               #search_fields = ('city',)
             elif(x=="experience_level"):
-              queryset=Employee.objects.filter(experience_level=self.request.GET[x])
+              queryset=Employee.objects.filter(experience_level__search=self.request.GET[x])
               #search_fields = ('experience_level',)
             elif(x=="job_title"):
-              queryset=Employee.objects.filter(job_title=self.request.GET[x])
+              queryset=Employee.objects.filter(job_title__search=self.request.GET[x])
               #search_fields = ('job_title',)
             elif(x == 'all'):
               queryset=Employee.objects.filter(Q(programming_language__name=self.request.GET[x]) | Q(little_bio__search=self.request.GET[x]) 

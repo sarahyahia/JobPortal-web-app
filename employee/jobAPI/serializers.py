@@ -14,7 +14,7 @@ class JobSerializer(serializers.ModelSerializer):
 
 class JobApplicantSerializer(serializers.ModelSerializer):
     employer = UserSerializer(read_only=True)
-    applicant = EmployeeSerializer(read_only=True)
+    applicant = EmployeeSerializer(read_only=True, many=True)
     job = JobSerializer(read_only=True)
 
     class Meta:

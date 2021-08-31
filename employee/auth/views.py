@@ -10,7 +10,7 @@ from rest_framework.authtoken.models import Token
 @api_view(['POST'])
 def api_signup(request):
     serializer = UserSerializer(data=request.data)
-    print(request.POST['isEmployee'])
+    print(request.data)
     if serializer.is_valid():
         try:
             serializer.save()
