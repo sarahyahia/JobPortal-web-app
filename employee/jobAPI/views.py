@@ -5,7 +5,7 @@ from rest_framework.decorators import api_view,permission_classes
 from rest_framework.permissions import IsAuthenticated
 from employee.models import  Job, JobApplicant
 from .serializers import JobSerializer, JobApplicantSerializer
-from rest_framework.filters import SearchFilter, OrderingFilter
+from rest_framework.filters import SearchFilter
 from django.db import IntegrityError
 
 
