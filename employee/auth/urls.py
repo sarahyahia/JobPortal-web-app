@@ -6,7 +6,7 @@ urlpatterns = [
       # logout
       path("logout/", views.Logout.as_view()),
       path("login/", views.login_view),
-      path('signup',views.api_signup),
+      path('signup',views.signup_view),
       path("login/", obtain_auth_token),
       
 ]

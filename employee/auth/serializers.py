@@ -12,6 +12,9 @@ class UserSerializer(serializers.ModelSerializer):
     def save(self,**kwargs):
         user = User(
             email = self.validated_data.get('email'),
+            isEmployer = self.validated_data.get('isEmployer'),
+            first_name = self.validated_data.get('first_name'),
+            last_name = self.validated_data.get('last_name'),
         )
         if self.validated_data.get('password') != self.validated_data.get('password2'):
             raise serializers.ValidationError({

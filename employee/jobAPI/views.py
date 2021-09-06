@@ -15,7 +15,6 @@ from django.db import IntegrityError
 # @permission_classes([IsAuthenticated,]) #IsManager
 def get_jobs(request):
     jobs = Job.objects.all()
-    print(jobs)
     serialzier = JobSerializer(instance=jobs,many=True)
     return Response(data=serialzier.data, status=status.HTTP_200_OK)
 

@@ -81,12 +81,14 @@ class User(AbstractBaseUser, PermissionsMixin):
 
 
 class Employer(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    user = models.OneToOneField(User, related_name='EmployerProfile', on_delete=models.CASCADE)
     company = models.CharField( max_length=50,null=True)
 
 class ProgrammingLanguage(models.Model):
     name = models.CharField(max_length=254)
     isActive = models.BooleanField(default=False)
+    class Meta:
+        ordering = ['name']
 
     def __str__(self):
         return f"{self.name}"
@@ -98,7 +100,7 @@ EXPERIENCE_CHOICES = [
 ]
 
 class Employee(models.Model):
-    user = models.OneToOneField(User,primary_key = True,on_delete=models.CASCADE)
+    user = models.OneToOneField(User, related_name='EmployeeProfile',primary_key = True,on_delete=models.CASCADE)
     job_title = models.CharField(max_length=100, blank=True)
     nationalID = models.CharField(max_length=14, unique=True, error_messages={'invalid':"National Id is already exist!"})
     city = models.CharField(max_length=100,null= True)
