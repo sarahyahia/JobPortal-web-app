@@ -1,1 +1,1 @@
-# JobHunting-web-app
+# JobPortal-web-app
